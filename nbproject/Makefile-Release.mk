@@ -35,8 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/a_costanti_tipi_module.o \
 	${OBJECTDIR}/costanti_menu.o \
-	${OBJECTDIR}/costanti_tipi_module.o \
 	${OBJECTDIR}/input_file.o \
 	${OBJECTDIR}/main.o
 
@@ -65,13 +65,13 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/contabilita.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.f} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/contabilita ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/a_costanti_tipi_module.o: a_costanti_tipi_module.f95
+	${MKDIR} -p ${OBJECTDIR}
+	$(COMPILE.f) -O2 -o ${OBJECTDIR}/a_costanti_tipi_module.o a_costanti_tipi_module.f95
+
 ${OBJECTDIR}/costanti_menu.o: costanti_menu.f95
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.f) -O2 -o ${OBJECTDIR}/costanti_menu.o costanti_menu.f95
-
-${OBJECTDIR}/costanti_tipi_module.o: costanti_tipi_module.f95
-	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.f) -O2 -o ${OBJECTDIR}/costanti_tipi_module.o costanti_tipi_module.f95
 
 ${OBJECTDIR}/input_file.o: input_file.f95
 	${MKDIR} -p ${OBJECTDIR}

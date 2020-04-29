@@ -8,13 +8,14 @@
 !
 
 MODULE costanti_menu
+    use a_costanti_tipi_module
    implicit none 
 
    real, parameter :: pi = 3.1415926536  
    real, parameter :: e = 2.7182818285 
    
-   integer, parameter :: minScelta = 1
-   integer, parameter :: maxScelta = 5
+!   integer, parameter :: minScelta = 1
+!   integer, parameter :: maxScelta = 5
    
 contains      
     subroutine show_consts()          
