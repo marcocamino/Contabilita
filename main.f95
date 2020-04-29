@@ -6,8 +6,12 @@
 !
 
 program main 
+    use costanti_tipi_module
     use costanti_menu   
     use input_file
+    
+    
+    
     implicit none
     
     integer :: scelta

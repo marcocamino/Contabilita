@@ -17,7 +17,7 @@ MODULE input_file
   
     contains 
     
-    !funzione che legge lo scarico dettagliato e lo carica in memoria
+    !funzione che legge lo scarico dettagliato e lo carica in memoria 
     function readScaritoTitoliIntoArray()
         implicit none
         integer :: readScaritoTitoliIntoArray
