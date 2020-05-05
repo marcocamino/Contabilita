@@ -58,42 +58,72 @@ MODULE input_file
     
     
 !Questa funzione legge il file dello scarico titoli e lo salva in un array.
-        function readScaritoTitoliIntoArray()
+    function readScaritoTitoliIntoArray(vettoreScaricoTitoli)
         implicit none
+        
+        !puntatore al vettore contenente i titoli letti dal file
+        type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
+        !numero di titoli presenti nel file e dimensione del vettore
         integer :: readScaritoTitoliIntoArray
+        
+        
         type(scarico_titoli), dimension(1) :: titolo
+        character(len=300) :: buffer
 
-        integer :: i, ios, fu,j
+        integer :: i, ios, fu,j,stato,numRighe
 
-        !lettura di un file csv di cui non conosco il numero di record
-        print*, "non conosco il numero di record del file csv, lo apro e leggo in modo differente"
-        open(FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231_5.csv", &
+        !lettura di un file csv per determianre il numero di record di cui è costituito.
+        print*, "Leggo il file csv per determinare il numero di record."
+        open(FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", &
             &  newunit=fu, STATUS="OLD", ACTION="READ",FORM="FORMATTED",POSITION="REWIND")
-        print*, "leggo e scrivo il programma"
-        i=1
+        !print*, "leggo e scrivo il programma"
+        i=0
         do
-            print*, "sono nel ciclo di lettura"
-            read(fu,*,IOSTAT=ios) titolo(1)
-            if(ios==0) then ! Nessun problema
-                print*, "letto una riga"
-                print*, i,">",titolo(1),"<"
+            read(fu,"(A)",IOSTAT=ios) buffer
+            if(ios==0) then 
+                ! Nessun problema
                 i = i+1
-            else ! Problemi in lettura
-                read(*,*) j                
-                print*, "termino la lettura problemi"
+                !print*, i,">",buffer,"<"
+            else 
+                ! Problemi in lettura oppure fine file
+                !print*, "Fine file: ", ios
+                !read(*,*) j                
                 exit
             end if
         end do
         
-        print*, "Il file è composto da: ", i, " righe."
+        !chiudo il file
+        close(fu)
+        
+        numRighe = i
+        print*, "Il file è composto da: ", numRighe, " righe."
+        !read(*,*) j
+        
+        print*, "Alloco la memoria "
+        ALLOCATE(vettoreScaricoTitoli(i),STAT=stato)
+        IF (stato == 0 ) THEN
+            Print*, "Ho allocato la memoria dinamica per i titoli letti nel file."
+            !read(*,*) j
+        end if
+        
+        
+        !lettura di un file csv, ma bisogna sapere prima il numero di record
+        PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
+
+        open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", status='old' , &
+         &  access ='sequential',form='formatted')
+
+        do i = 1, numRighe 
+            read(18,"(A)",IOSTAT=ios) buffer
+            vettoreScaricoTitoli(i)%compagnia = i
+            print*, i,">",buffer,"<"
+        end do
+        close(unit=18)
+        
+        PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
         read(*,*) j
-!        print*, "Stampa del vettore"
-!        do i = 1, 3
-!            print*, weather_reports(i)
-!        end do
-!        close(fu)
-!        read(*,*) j
-!        readScaritoTitoliIntoArray = 0
+        
+        readScaritoTitoliIntoArray = numRighe
         
     end function readScaritoTitoliIntoArray
 

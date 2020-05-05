@@ -13,8 +13,12 @@ program main
     
     implicit none
     
-    integer :: scelta
+    ! da togliere i
+    integer :: scelta,i,dimensioneVettoreScaricoTitoli
     CHARACTER(len=100) :: pathNameScaricoTitoli
+    
+    !puntatore al vettore contenente i titoli dello scarico decadale
+    type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
     
     print*, "Questo programma effettua un controllo sulla quadratura degli scarichi"
     
@@ -23,7 +27,7 @@ program main
     write(*,'(a41)', advance='no')  "Digita il nome del file scarico titoli: "
     read(*,*) pathNameScaricoTitoli
     
-    scelta = readScaritoTitoliIntoArray()
+    dimensioneVettoreScaricoTitoli = readScaritoTitoliIntoArray(vettoreScaricoTitoli)
 
     
     scelta = printAndChoice()
@@ -57,6 +61,11 @@ program main
     WRITE(*,'("Inserisci il valore di m: ")',ADVANCE='NO')
     READ(*,'(I5)') scelta
     
+    !ciclo temporaneo per verificare che i dati siano stati letti dal file
+        do i = 1, dimensioneVettoreScaricoTitoli
+            !read(18,*) buffer
+            print*, i,">",vettoreScaricoTitoli(i),"<"
+        end do
     print*, "Programma terminato"
     !call system('clear')  
     contains
