@@ -29,29 +29,35 @@ program main
     
     dimensioneVettoreScaricoTitoli = readScaritoTitoliIntoArray(vettoreScaricoTitoli)
 
-    
-    scelta = printAndChoice()
-    
-    do while (scelta /= maxScelta)
+    if (dimensioneVettoreScaricoTitoli > 0) then
+        scelta = printAndChoice()
 
-        if (scelta == 1) then 
-            print*, "opzione 1"
-        else if (scelta == 2) then 
-            print*, "opzione 2"
-        else if (scelta == 3) then 
-            print*, "opzione 3"
-        else 
-            print*, "opzione 4" 
-        end if
-        
-        read(*,*) scelta
-        scelta = printAndChoice()  
-    end do
+        do while (scelta /= maxScelta)
+
+            if (scelta == 1) then 
+                print*, "opzione 1"
+            else if (scelta == 2) then 
+                print*, "opzione 2"
+            else if (scelta == 3) then 
+                print*, "opzione 3"
+            else 
+                print*, "opzione 4" 
+            end if
+
+            read(*,*) scelta
+            scelta = printAndChoice()  
+        end do
+    
+    else
+        !call system('clear')
+        print*, "Non è stata allocata la memoria per importare i file dei titoli, l'elaborazione non può proseguire."
+    end if
     
     
     
     
-    !solo esempi
+    
+    !solo esempi  da cancellare
     call show_consts()
     
     Print*, "e raised to the power of 2.0 = ", ePowerx(2.0)
@@ -66,6 +72,11 @@ program main
             !read(18,*) buffer
             print*, i,">",vettoreScaricoTitoli(i),"<"
         end do
+        
+        
+        
+        
+        
     print*, "Programma terminato"
     !call system('clear')  
     contains

@@ -64,7 +64,7 @@ MODULE input_file
         !puntatore al vettore contenente i titoli letti dal file
         type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
         !numero di titoli presenti nel file e dimensione del vettore
-        integer :: readScaritoTitoliIntoArray
+        integer :: readScaritoTitoliIntoArray 
         
         
         type(scarico_titoli), dimension(1) :: titolo
@@ -100,28 +100,47 @@ MODULE input_file
         !read(*,*) j
         
         print*, "Alloco la memoria "
-        ALLOCATE(vettoreScaricoTitoli(i),STAT=stato)
+        ALLOCATE(vettoreScaricoTitoli(numRighe),STAT=stato)
         IF (stato == 0 ) THEN
             Print*, "Ho allocato la memoria dinamica per i titoli letti nel file."
             !read(*,*) j
+            
+            !lettura di un file csv, ma bisogna sapere prima il numero di record
+            PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
+
+            open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", &
+                & status='old' , access ='sequential',form='formatted')
+
+            do i = 1, numRighe 
+                read(18,"(A)",IOSTAT=ios) buffer
+                vettoreScaricoTitoli(i)%compagnia = i
+                print*, i,">",buffer,"<"
+            end do
+            close(unit=18)
+
+            PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
+            read(*,*) j
+        else 
+            numRighe = 0
+            
         end if
         
         
-        !lettura di un file csv, ma bisogna sapere prima il numero di record
-        PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
-
-        open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", status='old' , &
-         &  access ='sequential',form='formatted')
-
-        do i = 1, numRighe 
-            read(18,"(A)",IOSTAT=ios) buffer
-            vettoreScaricoTitoli(i)%compagnia = i
-            print*, i,">",buffer,"<"
-        end do
-        close(unit=18)
-        
-        PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
-        read(*,*) j
+!        !lettura di un file csv, ma bisogna sapere prima il numero di record
+!        PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
+!
+!        open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", status='old' , &
+!         &  access ='sequential',form='formatted')
+!
+!        do i = 1, numRighe 
+!            read(18,"(A)",IOSTAT=ios) buffer
+!            vettoreScaricoTitoli(i)%compagnia = i
+!            print*, i,">",buffer,"<"
+!        end do
+!        close(unit=18)
+!        
+!        PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
+!        read(*,*) j
         
         readScaritoTitoliIntoArray = numRighe
         
