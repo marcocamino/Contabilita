@@ -4,7 +4,7 @@
 !
 ! Created on 29 aprile 2020, 22.33
 !
-!questo modulo contiene le definizioni di costanti e tipi comuni a tutta l'applicazione
+!questo modulo contiene le definizioni di costanti e tipi comuni a tutta l'applicazione 
 MODULE a_costanti_tipi_module
 
     implicit none

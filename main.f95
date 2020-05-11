@@ -67,7 +67,7 @@ program main
     WRITE(*,'("Inserisci il valore di m: ")',ADVANCE='NO')
     READ(*,'(I5)') scelta
     
-    !ciclo temporaneo per verificare che i dati siano stati letti dal file
+    !ciclo temporaneo per verificare che i dati siano stati letti dal file 
         do i = 1, dimensioneVettoreScaricoTitoli 
             !read(18,*) buffer
             print*, i,">",vettoreScaricoTitoli(i),"<"

@@ -259,7 +259,7 @@ MODULE input_file
     
     
     !routine che data una stringa con i lvalori separati da ; restituisce il primo il di tipo integer e la stringa iniziale priva
-    !del primo valore a sinistra
+    !del primo valore a sinistra 
     subroutine dammi_prossimo_campo_intero(stringa, primo_campo_intero)
         implicit none
         character(len=300) :: stringa
