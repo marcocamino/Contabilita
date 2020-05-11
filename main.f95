@@ -68,7 +68,7 @@ program main
     READ(*,'(I5)') scelta
     
     !ciclo temporaneo per verificare che i dati siano stati letti dal file
-        do i = 1, dimensioneVettoreScaricoTitoli
+        do i = 1, dimensioneVettoreScaricoTitoli 
             !read(18,*) buffer
             print*, i,">",vettoreScaricoTitoli(i),"<"
         end do
