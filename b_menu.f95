@@ -7,36 +7,13 @@
 ! Created on 21 aprile 2020, 21.59
 !
 
-MODULE costanti_menu
+MODULE b_menu
     use a_costanti_tipi_module
-   implicit none 
+    implicit none 
 
-   real, parameter :: pi = 3.1415926536  
-   real, parameter :: e = 2.7182818285 
-   
-!   integer, parameter :: minScelta = 1
-!   integer, parameter :: maxScelta = 5
-   
+ 
 contains      
-    subroutine show_consts()          
-        print*, "Pi = ", pi          
-        print*,  "e = ", e     
-    end subroutine show_consts 
    
-    function ePowerx(x)result(ePx) 
-    implicit none
-        real::x
-        real::ePx
-        ePx = e ** x
-    end function ePowerx
-   
-    real function quadrato(x) 
-        implicit none
-        real::x
-        quadrato = x * x
-    end function quadrato
-
-    
     function printAndChoice()
         implicit none
         integer :: printAndChoice
@@ -62,4 +39,4 @@ contains
         end do
     end function printAndChoice
     
-END MODULE costanti_menu
+END MODULE b_menu

@@ -16,6 +16,10 @@ MODULE a_costanti_tipi_module
     integer, parameter :: num_righe_intestazione_titoli = 2
     integer, parameter :: num_righe_chiusura_titoli = 1
     
+    integer, parameter :: num_righe_intestazione_titoli_dettagliato = 1
+    
+    CHARACTER(len=100) :: pathNameWorkingDirectory = "C:\Users\audacia\Desktop\fortran\fileInput\"
+    
     type :: scarico_titoli
         integer :: compagnia
         integer :: agenzia
@@ -55,8 +59,33 @@ MODULE a_costanti_tipi_module
         integer :: data_immatricolazione
         integer :: eta_conducente
         character(len=10) :: tipo_quietanzamento
-        
-        
     end type scarico_titoli
+    
+    
+    type :: scarico_dettagliato_titoli
+        integer :: data_foglio_cassa
+        integer :: numero_foglio_cassa
+        integer :: riga_foglio_cassa
+        integer :: operation_type
+        integer :: data_incasso
+        character(len=20) :: contraente
+        character(len=15) :: cod_fis_par_iva
+        integer :: numero_polizza
+        integer :: numero_appendice
+        integer :: data_decorrenza
+        character(len=2) :: frazionamento
+        integer :: ramo
+        character(len=4) :: pdgar_codgaranzia
+        real :: pdgar_netto1rata
+        real :: pdgar_tasse1rata
+        real :: pdgar_abbuono1rata
+        real :: contributo_ssn
+        real :: antiraket
+        character(len=4) :: provincia_di_residenza
+        real :: imposte_provinciali
+        character(len=4) :: sigla_targa
+        character(len=10) :: numero_targa
+    end type scarico_dettagliato_titoli    
+    
 
 END MODULE a_costanti_tipi_module

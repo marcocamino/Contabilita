@@ -36,7 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/a_costanti_tipi_module.o \
-	${OBJECTDIR}/costanti_menu.o \
+	${OBJECTDIR}/b_menu.o \
 	${OBJECTDIR}/input_file.o \
 	${OBJECTDIR}/main.o
 
@@ -69,9 +69,9 @@ ${OBJECTDIR}/a_costanti_tipi_module.o: a_costanti_tipi_module.f95
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.f) -g -o ${OBJECTDIR}/a_costanti_tipi_module.o a_costanti_tipi_module.f95
 
-${OBJECTDIR}/costanti_menu.o: costanti_menu.f95
+${OBJECTDIR}/b_menu.o: b_menu.f95
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.f) -g -o ${OBJECTDIR}/costanti_menu.o costanti_menu.f95
+	$(COMPILE.f) -g -o ${OBJECTDIR}/b_menu.o b_menu.f95
 
 ${OBJECTDIR}/input_file.o: input_file.f95
 	${MKDIR} -p ${OBJECTDIR}

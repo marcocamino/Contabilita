@@ -7,27 +7,48 @@
 
 program main 
     use a_costanti_tipi_module
-    use costanti_menu   
+    use b_menu   
     use input_file
-    
-    
+       
     implicit none
     
     ! da togliere i
-    integer :: scelta,i,dimensioneVettoreScaricoTitoli
-    CHARACTER(len=100) :: pathNameScaricoTitoli
+    integer :: scelta,i
+    CHARACTER(len=100) :: nameFileScaricoTitoli
+    CHARACTER(len=100) :: nameFileScaricoTitoliDettagliato
     
     !puntatore al vettore contenente i titoli dello scarico decadale
     type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
+    integer :: dimensioneVettoreScaricoTitoli
     
+    !puntatore al vettore contenente i titoli dettagliati per garanzia 
+    type(scarico_dettagliato_titoli), POINTER :: vettoreScaricoDettagliatoTitoli(:)
+    integer :: dimensioneVettoreScaricoDettagliatoTitoli
+       
     print*, "Questo programma effettua un controllo sulla quadratura degli scarichi"
     
     !leggo il nome del file dello scarico titoli
-    print*, "La directory di lavoro è:    C:\Users\audacia\Desktop\fortran"
+    print*, "La directory di lavoro è: " ,pathNameWorkingDirectory
     write(*,'(a41)', advance='no')  "Digita il nome del file scarico titoli: "
-    read(*,*) pathNameScaricoTitoli
+    read(*,*) nameFileScaricoTitoli
     
-    dimensioneVettoreScaricoTitoli = readScaritoTitoliIntoArray(vettoreScaricoTitoli)
+    !versione temoranea
+    nameFileScaricoTitoli = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
+                                                    &"ScaricoTitoloCassa_20181201_20181231.csv"
+    print*, "Il path name completo è: " ,nameFileScaricoTitoli
+    
+    !versione con funzioni  - funzionante
+    !dimensioneVettoreScaricoTitoli = readScaritoTitoliIntoArray(vettoreScaricoTitoli)
+    
+    !versione con subroutine
+    call readScaritoTitoliWriteIntoArray(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,nameFileScaricoTitoli)
+    
+    
+    nameFileScaricoTitoliDettagliato = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
+                                                    &"ScaricoDettaglioTitoliTasse_20181201_20181231.csv"
+    !lettura del file contenente i titoli dettagliati per garanzia e scrittura del file in un array
+    call readScaritoTitoliDettagliatiWriteIntoArray(vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli,&
+                                                    &nameFileScaricoTitoliDettagliato)
 
     if (dimensioneVettoreScaricoTitoli > 0) then
         scelta = printAndChoice()
@@ -44,7 +65,6 @@ program main
                 print*, "opzione 4" 
             end if
 
-            read(*,*) scelta
             scelta = printAndChoice()  
         end do
     
@@ -52,31 +72,18 @@ program main
         !call system('clear')
         print*, "Non è stata allocata la memoria per importare i file dei titoli, l'elaborazione non può proseguire."
     end if
-    
-    
-    
-    
-    
+     
     !solo esempi  da cancellare
-    call show_consts()
-    
-    Print*, "e raised to the power of 2.0 = ", ePowerx(2.0)
- 
-    Print*, "e raised to the power of 2.0 = ", quadrato(2.0)
     
     WRITE(*,'("Inserisci il valore di m: ")',ADVANCE='NO')
     READ(*,'(I5)') scelta
     
     !ciclo temporaneo per verificare che i dati siano stati letti dal file 
-        do i = 1, dimensioneVettoreScaricoTitoli 
+        do i = 1, dimensioneVettoreScaricoDettagliatoTitoli 
             !read(18,*) buffer
-            print*, i,">",vettoreScaricoTitoli(i),"<"
+            print*, i,">",vettoreScaricoDettagliatoTitoli(i),"<"
         end do
-        
-        
-        
-        
-        
+          
     print*, "Programma terminato"
     !call system('clear')  
     contains

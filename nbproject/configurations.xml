@@ -13,7 +13,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>a_costanti_tipi_module.f95</itemPath>
-      <itemPath>costanti_menu.f95</itemPath>
+      <itemPath>b_menu.f95</itemPath>
       <itemPath>input_file.f95</itemPath>
       <itemPath>main.f95</itemPath>
     </logicalFolder>
@@ -41,7 +41,7 @@
       </compileType>
       <item path="a_costanti_tipi_module.f95" ex="false" tool="2" flavor2="0">
       </item>
-      <item path="costanti_menu.f95" ex="false" tool="2" flavor2="0">
+      <item path="b_menu.f95" ex="false" tool="2" flavor2="0">
       </item>
       <item path="input_file.f95" ex="false" tool="2" flavor2="0">
       </item>
@@ -70,7 +70,7 @@
       </compileType>
       <item path="a_costanti_tipi_module.f95" ex="false" tool="2" flavor2="0">
       </item>
-      <item path="costanti_menu.f95" ex="false" tool="2" flavor2="0">
+      <item path="b_menu.f95" ex="false" tool="2" flavor2="0">
       </item>
       <item path="input_file.f95" ex="false" tool="2" flavor2="0">
       </item>
