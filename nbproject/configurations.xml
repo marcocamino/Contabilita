@@ -14,6 +14,7 @@
                    projectFiles="true">
       <itemPath>a_costanti_tipi_module.f95</itemPath>
       <itemPath>b_menu.f95</itemPath>
+      <itemPath>controllo_quadratura_scarichi.f95</itemPath>
       <itemPath>input_file.f95</itemPath>
       <itemPath>main.f95</itemPath>
     </logicalFolder>
@@ -43,6 +44,8 @@
       </item>
       <item path="b_menu.f95" ex="false" tool="2" flavor2="0">
       </item>
+      <item path="controllo_quadratura_scarichi.f95" ex="false" tool="2" flavor2="0">
+      </item>
       <item path="input_file.f95" ex="false" tool="2" flavor2="0">
       </item>
       <item path="main.f95" ex="false" tool="2" flavor2="0">
@@ -71,6 +74,8 @@
       <item path="a_costanti_tipi_module.f95" ex="false" tool="2" flavor2="0">
       </item>
       <item path="b_menu.f95" ex="false" tool="2" flavor2="0">
+      </item>
+      <item path="controllo_quadratura_scarichi.f95" ex="false" tool="2" flavor2="0">
       </item>
       <item path="input_file.f95" ex="false" tool="2" flavor2="0">
       </item>

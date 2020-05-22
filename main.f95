@@ -9,6 +9,7 @@ program main
     use a_costanti_tipi_module
     use b_menu   
     use input_file
+    use controllo_quadratura_scarichi
        
     implicit none
     
@@ -34,7 +35,7 @@ program main
     
     !versione temoranea
     nameFileScaricoTitoli = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
-                                                    &"ScaricoTitoloCassa_20181201_20181231.csv"
+                                                    &"ScaricoTitoloCassa_20200401_20200430.csv"
     print*, "Il path name completo è: " ,nameFileScaricoTitoli
     
     !versione con funzioni  - funzionante
@@ -45,7 +46,7 @@ program main
     
     
     nameFileScaricoTitoliDettagliato = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
-                                                    &"ScaricoDettaglioTitoliTasse_20181201_20181231.csv"
+                                                    &"ScaricoDettaglioTitoliTasse_20200401_20200430.csv"
     !lettura del file contenente i titoli dettagliati per garanzia e scrittura del file in un array
     call readScaritoTitoliDettagliatiWriteIntoArray(vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli,&
                                                     &nameFileScaricoTitoliDettagliato)
@@ -56,11 +57,14 @@ program main
         do while (scelta /= maxScelta)
 
             if (scelta == 1) then 
-                print*, "opzione 1"
+                call controllo_basi_imponibili(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,&
+                    &vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli)
             else if (scelta == 2) then 
-                print*, "opzione 2"
+                call verifica_quadratura_tasse(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,&
+                    &vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli)
             else if (scelta == 3) then 
-                print*, "opzione 3"
+                call verifica_quadratura_scarichi(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,&
+                    &vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli)
             else 
                 print*, "opzione 4" 
             end if

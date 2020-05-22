@@ -24,7 +24,7 @@ MODULE a_costanti_tipi_module
         integer :: compagnia
         integer :: agenzia
         integer :: intermediario
-        integer :: produttore
+        character(len=20) :: produttore
         integer :: data_giornale_cassa
         integer :: pagina_giornale_cassa
         integer :: linea_giornale_cassa
@@ -42,7 +42,7 @@ MODULE a_costanti_tipi_module
         integer :: data_pagamento
         real :: premio_pagato
         real :: commissioni
-        real :: imposta_totali
+        real :: imposte_totali
         real :: ssn
         real :: rca_commissioni
         real :: commissioni_cvt

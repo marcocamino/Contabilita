@@ -364,8 +364,11 @@ MODULE input_file
         vettoreRecordScaricoTitoli(posizione)%intermediario = campo_intero  
         
         !produttore
-        call dammi_prossimo_campo_intero(record_stringa,campo_intero)
-        vettoreRecordScaricoTitoli(posizione)%produttore = campo_intero
+        call dammi_prossimo_campo_stringa(record_stringa,campo_stringa)
+        vettoreRecordScaricoTitoli(posizione)%produttore = campo_stringa
+        
+!        call dammi_prossimo_campo_stringa(record_stringa,campo_stringa)
+!        vettoreRecordScaricoTitoli(posizione)%contraente = campo_stringa   
         
         !data_giornale_cassa
         call dammi_prossimo_campo_intero(record_stringa,campo_intero)
@@ -437,7 +440,7 @@ MODULE input_file
         
         !imposta_totali
         call dammi_prossimo_campo_reale(record_stringa,campo_reale)
-        vettoreRecordScaricoTitoli(posizione)%imposta_totali = campo_reale     
+        vettoreRecordScaricoTitoli(posizione)%imposte_totali = campo_reale     
         
         !ssn
         call dammi_prossimo_campo_reale(record_stringa,campo_reale)

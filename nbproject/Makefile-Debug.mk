@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/a_costanti_tipi_module.o \
 	${OBJECTDIR}/b_menu.o \
+	${OBJECTDIR}/controllo_quadratura_scarichi.o \
 	${OBJECTDIR}/input_file.o \
 	${OBJECTDIR}/main.o
 
@@ -72,6 +73,10 @@ ${OBJECTDIR}/a_costanti_tipi_module.o: a_costanti_tipi_module.f95
 ${OBJECTDIR}/b_menu.o: b_menu.f95
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.f) -g -o ${OBJECTDIR}/b_menu.o b_menu.f95
+
+${OBJECTDIR}/controllo_quadratura_scarichi.o: controllo_quadratura_scarichi.f95
+	${MKDIR} -p ${OBJECTDIR}
+	$(COMPILE.f) -g -o ${OBJECTDIR}/controllo_quadratura_scarichi.o controllo_quadratura_scarichi.f95
 
 ${OBJECTDIR}/input_file.o: input_file.f95
 	${MKDIR} -p ${OBJECTDIR}

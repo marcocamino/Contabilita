@@ -18,11 +18,11 @@ contains
         implicit none
         integer :: printAndChoice
         call system('clear') 
-        print*, "1) Controllo della doppia inclusione insiemistica tra i due scarichi. "
+        print*, "1) Controllo della ugualianza delle basi imponibili. "
         print*, " "
-        print*, "2) Controllo della quadrature contabile tra i due scarichi. "
+        print*, "2) Controllo della ugualianza del totale tasse tra i due scarichi. "
         print*, " "
-        print*, "3) Controllo che non vi siano operazioni 18 di un altro mese da scartare. "
+        print*, "3) Controllo quadratura tra i due scarichi. "
         print*, " "
         print*, "4) calcolo tasse per regione. "
         print*, " "
