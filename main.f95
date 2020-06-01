@@ -3,6 +3,7 @@
 ! Author: audacia
 !
 ! Created on 21 aprile 2020, 21.55
+! versione 1.0 del 20200523
 !
 
 program main 
@@ -20,11 +21,11 @@ program main
     
     !puntatore al vettore contenente i titoli dello scarico decadale
     type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
-    integer :: dimensioneVettoreScaricoTitoli
+    integer :: dimensioneVettoreScaricoTitoli = 0
     
     !puntatore al vettore contenente i titoli dettagliati per garanzia 
     type(scarico_dettagliato_titoli), POINTER :: vettoreScaricoDettagliatoTitoli(:)
-    integer :: dimensioneVettoreScaricoDettagliatoTitoli
+    integer :: dimensioneVettoreScaricoDettagliatoTitoli = 0
        
     print*, "Questo programma effettua un controllo sulla quadratura degli scarichi"
     
@@ -33,29 +34,26 @@ program main
     write(*,'(a41)', advance='no')  "Digita il nome del file scarico titoli: "
     read(*,*) nameFileScaricoTitoli
     
-    !versione temoranea
+    !versione temporanea per sviluppo
     nameFileScaricoTitoli = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
                                                     &"ScaricoTitoloCassa_20200401_20200430.csv"
     print*, "Il path name completo è: " ,nameFileScaricoTitoli
     
-    !versione con funzioni  - funzionante
-    !dimensioneVettoreScaricoTitoli = readScaritoTitoliIntoArray(vettoreScaricoTitoli)
-    
-    !versione con subroutine
+    !routine che legge il file dei titoli e li memorizza in un vettore
     call readScaritoTitoliWriteIntoArray(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,nameFileScaricoTitoli)
     
     
     nameFileScaricoTitoliDettagliato = pathNameWorkingDirectory(1:(LEN_TRIM(pathNameWorkingDirectory)))//&
                                                     &"ScaricoDettaglioTitoliTasse_20200401_20200430.csv"
-    !lettura del file contenente i titoli dettagliati per garanzia e scrittura del file in un array
+                                                    
+    !routine che legge il file contenente i titoli dettagliati per garanzia e memorizza in un array
     call readScaritoTitoliDettagliatiWriteIntoArray(vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli,&
                                                     &nameFileScaricoTitoliDettagliato)
 
-    if (dimensioneVettoreScaricoTitoli > 0) then
+    !se entrambi i file sono stati memorizzati negli opportuni array procedo con l'elaborazione                                               
+    if ((dimensioneVettoreScaricoTitoli > 0) .and. (dimensioneVettoreScaricoDettagliatoTitoli > 0)) then
         scelta = printAndChoice()
-
         do while (scelta /= maxScelta)
-
             if (scelta == 1) then 
                 call controllo_basi_imponibili(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,&
                     &vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli)
@@ -66,9 +64,8 @@ program main
                 call verifica_quadratura_scarichi(vettoreScaricoTitoli,dimensioneVettoreScaricoTitoli,&
                     &vettoreScaricoDettagliatoTitoli,dimensioneVettoreScaricoDettagliatoTitoli)
             else 
-                print*, "opzione 4" 
+                print*, "opzione 4 in progress..." 
             end if
-
             scelta = printAndChoice()  
         end do
     
@@ -77,19 +74,12 @@ program main
         print*, "Non è stata allocata la memoria per importare i file dei titoli, l'elaborazione non può proseguire."
     end if
      
-    !solo esempi  da cancellare
-    
-    WRITE(*,'("Inserisci il valore di m: ")',ADVANCE='NO')
-    READ(*,'(I5)') scelta
-    
     !ciclo temporaneo per verificare che i dati siano stati letti dal file 
-        do i = 1, dimensioneVettoreScaricoDettagliatoTitoli 
-            !read(18,*) buffer
-            print*, i,">",vettoreScaricoDettagliatoTitoli(i),"<"
-        end do
+    do i = 1, dimensioneVettoreScaricoDettagliatoTitoli 
+        print*, i,">",vettoreScaricoDettagliatoTitoli(i),"<"
+    end do
           
-    print*, "Programma terminato"
-    !call system('clear')  
+    print*, "Programma terminato" 
     contains
 
 end program main 

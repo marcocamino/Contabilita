@@ -3,7 +3,7 @@
 ! Author: audacia
 !
 ! Created on 25 aprile 2020, 23.32
-!
+! versione 1.0 del 27/05/2020
 
 MODULE input_file
     use a_costanti_tipi_module
@@ -19,39 +19,31 @@ MODULE input_file
         type(scarico_dettagliato_titoli), POINTER :: vettoreScaricoDettagliatoTitoli(:)
         !numero di titoli presenti nel file e dimensione del vettore
         integer :: dimensioneVettoreScaricoDettagliatoTitoli 
+        !path name del file contenente i titoli dettagliati per garanzia.
         CHARACTER(len=100) :: nameFileScaricoTitoliDettagliato
                 
         character(len=300) :: buffer
-        integer :: i, ios, fu,j,stato,numRighe
-
-        print*, "Sono nella routine che legge lo scarico dettagliato"
-        read(*,*) j
+        integer :: i=0, ios, fu,j,stato,numRighe
+        character(len=1) :: input
         
         !lettura di un file csv per determianre il numero di record di cui è costituito.
-        print*, "Leggo il file csv per determinare il numero di record."
         open(FILE=nameFileScaricoTitoliDettagliato, newunit=fu, STATUS="OLD", ACTION="READ",FORM="FORMATTED",POSITION="REWIND")
-        !print*, "leggo e scrivo il programma"
-        i=0
+
         do
             read(fu,"(A)",IOSTAT=ios) buffer
             if(ios==0) then 
                 ! Nessun problema
                 i = i+1
-                !print*, i,">",buffer,"<"
             else 
-                ! Problemi in lettura oppure fine file
-                !print*, "Fine file: ", ios
-                !read(*,*) j                
+                ! Problemi in lettura oppure fine file               
                 exit
             end if
         end do
-        
-        !chiudo il file
+
         close(fu)
         
         numRighe = i 
         print*, "Il file titoli dettagliato per garanzie è composto da: ", numRighe, " righe."
-        read(*,*) j 
 
         print*, "Alloco la memoria "
         ALLOCATE(vettoreScaricoDettagliatoTitoli(numRighe ),STAT=stato)
@@ -59,7 +51,7 @@ MODULE input_file
             Print*, "Ho allocato la memoria dinamica per i titoli letti nel file."
             
             !lettura di un file csv, ma bisogna sapere prima il numero di record
-            PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
+            print*, "Leggo il  file csv, e scrivo i records in memoria"
             open(unit=18, FILE=nameFileScaricoTitoliDettagliato, status='old' , access ='sequential',form='formatted')
 
             do i = 1, (numRighe )
@@ -68,12 +60,12 @@ MODULE input_file
                     call copia_record_dettagliato(buffer, vettoreScaricoDettagliatoTitoli,( i - &
                                     &num_righe_intestazione_titoli_dettagliato))
                 endif
-                print*, i,">",buffer,"<"
             end do
             close(unit=18)
 
-            PRINT*, "Terminato di scrivere nel vettore i titoli dettagliati presenti nel file."
-            read(*,*) j
+            print*, "Terminato di scrivere nel vettore i titoli dettagliati presenti nel file."
+            write(*,'(a14)', advance='no')  "Premi invio. "
+            read(*, '(A)') input
             dimensioneVettoreScaricoDettagliatoTitoli = numRighe - num_righe_intestazione_titoli_dettagliato
         else 
             dimensioneVettoreScaricoDettagliatoTitoli = 0
@@ -82,153 +74,68 @@ MODULE input_file
     end subroutine
     
     
-    
-    subroutine readScaritoTitoliWriteIntoArray (vettoreScaricoTitoli, readScaritoTitoliIntoArray,nameFileScaricoTitoli)
+    !questa routine legge il file dello scarico titoli e lo memorizza in un vettore
+    subroutine readScaritoTitoliWriteIntoArray (vettoreScaricoTitoli, lunghezzaVettoreScaricoTitoli,nameFileScaricoTitoli)
         implicit none
         
         !puntatore al vettore contenente i titoli letti dal file
         type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
         !numero di titoli presenti nel file e dimensione del vettore
-        integer :: readScaritoTitoliIntoArray
+        integer :: lunghezzaVettoreScaricoTitoli
         CHARACTER(len=100) :: nameFileScaricoTitoli
-        
-        
+               
         type(scarico_titoli), dimension(1) :: titolo
         character(len=300) :: buffer
+        character(len=1) :: input
 
-        integer :: i, ios, fu,j,stato,numRighe
+        integer :: i=0, ios, fu, stato, numRighe
 
-        !lettura di un file csv per determianre il numero di record di cui è costituito.
-        print*, "Leggo il file csv per determinare il numero di record." , nameFileScaricoTitoli
+        !leggo il file csv per determianre il numero di record di cui è costituito.
         open(FILE=nameFileScaricoTitoli, newunit=fu, STATUS="OLD", ACTION="READ",FORM="FORMATTED",POSITION="REWIND")
-        !print*, "leggo e scrivo il programma"
-        i=0
+
         do
             read(fu,"(A)",IOSTAT=ios) buffer
             if(ios==0) then 
                 ! Nessun problema
                 i = i+1
-                !print*, i,">",buffer,"<"
             else 
-                ! Problemi in lettura oppure fine file
-                !print*, "Fine file: ", ios
-                !read(*,*) j                
+                ! Problemi in lettura oppure fine file           
                 exit
             end if
         end do
         
-        !chiudo il file
         close(fu)
         
         numRighe = i 
-        print*, "Il file è composto da: ", numRighe, " righe."
-        !read(*,*) j
-        
-        print*, "Alloco la memoria "
-        ALLOCATE(vettoreScaricoTitoli(numRighe - 3),STAT=stato)
+        print*, "Il file è composto da: ", numRighe, " righe, comprese le righe di intestazione e chiusura."
+        ALLOCATE(vettoreScaricoTitoli(numRighe - num_righe_intestazione_chiusura_titoli),STAT=stato)
         IF (stato == 0 ) THEN
-            Print*, "Ho allocato la memoria dinamica per i titoli letti nel file."
+            Print*, "Ho allocato la memoria dinamica per i titoli contenuti nel file."
             
             !lettura di un file csv, ma bisogna sapere prima il numero di record
-            PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
-            !open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", &
-            open(unit=18, FILE=nameFileScaricoTitoli, &
-                & status='old' , access ='sequential',form='formatted')
+            print*, "Leggo il  file csv, e scrivo i records nel vettore"
+            open(unit=18, FILE=nameFileScaricoTitoli, status='old' , access ='sequential',form='formatted')
 
             do i = 1, (numRighe - num_righe_chiusura_titoli)
                 read(18,"(A)",IOSTAT=ios) buffer
                 if(i > num_righe_intestazione_titoli) then
                     call copia_record(buffer, vettoreScaricoTitoli,( i - num_righe_intestazione_titoli))
                 endif
-                !print*, i,">",buffer,"<"
             end do
             close(unit=18)
 
-            PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
-            read(*,*) j
+            print*, "Terminato di scrivere nel vettore i titoli presenti nel file."            
             numRighe = numRighe - num_righe_intestazione_chiusura_titoli
         else 
-            numRighe = 0
-            
+            numRighe = 0 
+            print*, "Non è stato possibile allocare la memoria."
         endif
-        
-        readScaritoTitoliIntoArray = numRighe
+        write(*,'(a14)', advance='no')  "Premi invio. "
+        read(*, '(A)') input
+        lunghezzaVettoreScaricoTitoli = numRighe
               
     end subroutine
-        
-!    !Questa funzione legge il file dello scarico titoli e lo salva in un array.
-!    function readScaritoTitoliIntoArray(vettoreScaricoTitoli)
-!        implicit none
-!        
-!        !puntatore al vettore contenente i titoli letti dal file
-!        type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
-!        !numero di titoli presenti nel file e dimensione del vettore
-!        integer :: readScaritoTitoliIntoArray 
-!        
-!        
-!        type(scarico_titoli), dimension(1) :: titolo
-!        character(len=300) :: buffer
-!
-!        integer :: i, ios, fu,j,stato,numRighe
-!
-!        !lettura di un file csv per determianre il numero di record di cui è costituito.
-!        print*, "Leggo il file csv per determinare il numero di record."
-!        open(FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", &
-!            &  newunit=fu, STATUS="OLD", ACTION="READ",FORM="FORMATTED",POSITION="REWIND")
-!        !print*, "leggo e scrivo il programma"
-!        i=0
-!        do
-!            read(fu,"(A)",IOSTAT=ios) buffer
-!            if(ios==0) then 
-!                ! Nessun problema
-!                i = i+1
-!                !print*, i,">",buffer,"<"
-!            else 
-!                ! Problemi in lettura oppure fine file
-!                !print*, "Fine file: ", ios
-!                !read(*,*) j                
-!                exit
-!            end if
-!        end do
-!        
-!        !chiudo il file
-!        close(fu)
-!        
-!        numRighe = i 
-!        print*, "Il file è composto da: ", numRighe, " righe."
-!        !read(*,*) j
-!        
-!        print*, "Alloco la memoria "
-!        ALLOCATE(vettoreScaricoTitoli(numRighe - 3),STAT=stato)
-!        IF (stato == 0 ) THEN
-!            Print*, "Ho allocato la memoria dinamica per i titoli letti nel file."
-!            
-!            !lettura di un file csv, ma bisogna sapere prima il numero di record
-!            PRINT*, "Leggo il  file csv, e scrivo i records in memoria"
-!
-!            open(unit=18, FILE="C:\Users\audacia\Desktop\fortran\fileInput\ScaricoTitoloCassa_20181201_20181231.csv", &
-!                & status='old' , access ='sequential',form='formatted')
-!
-!            do i = 1, (numRighe - num_righe_chiusura_titoli)
-!                read(18,"(A)",IOSTAT=ios) buffer
-!                if(i > num_righe_intestazione_titoli) then
-!                    call copia_record(buffer, vettoreScaricoTitoli,( i - num_righe_intestazione_titoli))
-!                endif
-!                print*, i,">",buffer,"<"
-!            end do
-!            close(unit=18)
-!
-!            PRINT*, "Terminato di scrivere nel vettore i titoli presenti nel file."
-!            read(*,*) j
-!            numRighe = numRighe - num_righe_intestazione_chiusura_titoli
-!        else 
-!            numRighe = 0
-!            
-!        endif
-!        
-!        readScaritoTitoliIntoArray = numRighe
-!        
-!    end function readScaritoTitoliIntoArray
+     
 
     !routine che copia il record del file titoli dettagliati per garanzia nel vettore contente i titoli dettagliati per garanzia
     subroutine copia_record_dettagliato(record_stringa, vettoreScaricoDettagliatoTitoli, posizione)
@@ -241,8 +148,6 @@ MODULE input_file
         character(len=100) :: campo_stringa
         integer posizione_separatore, campo_intero
         real campo_reale
-        
-        print*, "Sono nella routine dei titoli dettagliati.", record_stringa
         
         !separo il valore della data foglio cassa e lo scrivo nel rispettivo campo del vettore
         call dammi_prossimo_campo_intero(record_stringa,campo_intero)
@@ -337,7 +242,7 @@ MODULE input_file
     
     
     !Routine che copia il record del file csv nel vettore contenente i titoli dello scarico decadale
-    SUBROUTINE copia_record(record_stringa, vettoreRecordScaricoTitoli, posizione)
+    subroutine copia_record(record_stringa, vettoreRecordScaricoTitoli, posizione)
         implicit none
         
         character(len=300) :: record_stringa
@@ -347,8 +252,6 @@ MODULE input_file
         character(len=100) :: campo_stringa
         integer posizione_separatore, campo_intero
         real campo_reale
-        
-        print*, "Sono nella routine.", record_stringa
         
         
         !separo il valore della compagnia e lo scrivo nel rispettivo campo del vettore
@@ -365,10 +268,7 @@ MODULE input_file
         
         !produttore
         call dammi_prossimo_campo_stringa(record_stringa,campo_stringa)
-        vettoreRecordScaricoTitoli(posizione)%produttore = campo_stringa
-        
-!        call dammi_prossimo_campo_stringa(record_stringa,campo_stringa)
-!        vettoreRecordScaricoTitoli(posizione)%contraente = campo_stringa   
+        vettoreRecordScaricoTitoli(posizione)%produttore = campo_stringa   
         
         !data_giornale_cassa
         call dammi_prossimo_campo_intero(record_stringa,campo_intero)
@@ -505,14 +405,12 @@ MODULE input_file
         !tipo_quietanzamento
         call dammi_prossimo_campo_stringa(record_stringa,campo_stringa)
         vettoreRecordScaricoTitoli(posizione)%tipo_quietanzamento = campo_stringa 
-!            str = "125"
-!    read(str , *) num
         
-    END SUBROUTINE copia_record
+    end subroutine copia_record
     
     
-    !routine che data una stringa con i lvalori separati da ; restituisce il primo il di tipo integer e la stringa iniziale priva
-    !del primo valore a sinistra 
+    !routine che data una stringa con i valori separati da ; restituisce il primo da sinistra di tipo integer e la stringa iniziale 
+    !priva del primo valore a sinistra 
     subroutine dammi_prossimo_campo_intero(stringa, primo_campo_intero)
         implicit none
         character(len=300) :: stringa
@@ -531,7 +429,9 @@ MODULE input_file
         endif
         stringa = stringa(posizione_del_separatore + 1:)
     end subroutine
- 
+
+    !routine che data una stringa con i valori separati da ; restituisce il primo da sinistra di tipo reale e la stringa iniziale 
+    !priva del primo valore a sinistra
     subroutine dammi_prossimo_campo_reale(stringa, primo_campo_reale)
         implicit none
         character(len=300) :: stringa
@@ -551,10 +451,9 @@ MODULE input_file
         stringa = stringa(posizione_del_separatore + 1:)
     end subroutine   
     
-    
-    
-    
-    
+        
+    !routine che data una stringa con i valori separati da ; restituisce il primo da sinistra di tipo stringa e la stringa iniziale 
+    !priva del primo valore a sinistra    
     subroutine dammi_prossimo_campo_stringa(stringa, primo_campo_stringa)
         implicit none
         character(len=300) :: stringa
