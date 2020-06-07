@@ -3,7 +3,7 @@
 ! Author: audacia
 !
 ! Created on 21 aprile 2020, 21.55
-! versione 1.0 del 20200523
+! versione 1.1 del 20200606
 !
 
 program main 
@@ -14,8 +14,7 @@ program main
        
     implicit none
     
-    ! da togliere i
-    integer :: scelta,i
+    integer :: scelta
     CHARACTER(len=100) :: nameFileScaricoTitoli
     CHARACTER(len=100) :: nameFileScaricoTitoliDettagliato
     
@@ -70,14 +69,9 @@ program main
         end do
     
     else
-        !call system('clear')
+        call system('clear')
         print*, "Non è stata allocata la memoria per importare i file dei titoli, l'elaborazione non può proseguire."
     end if
-     
-    !ciclo temporaneo per verificare che i dati siano stati letti dal file 
-    do i = 1, dimensioneVettoreScaricoDettagliatoTitoli 
-        print*, i,">",vettoreScaricoDettagliatoTitoli(i),"<"
-    end do
           
     print*, "Programma terminato" 
     contains

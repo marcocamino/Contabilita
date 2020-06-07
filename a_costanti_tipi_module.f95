@@ -5,7 +5,7 @@
 ! Created on 29 aprile 2020, 22.33
 !
 ! questo modulo contiene le definizioni di costanti e tipi comuni a tutta l'applicazione 
-! versione 1.0 del 20200523
+! versione 1.1 del 20200606
 
 MODULE a_costanti_tipi_module
 
@@ -13,6 +13,16 @@ MODULE a_costanti_tipi_module
     
     integer, parameter :: minScelta = 1
     integer, parameter :: maxScelta = 5
+    
+    integer, parameter :: maxPrecisione = 16
+    
+    integer, parameter :: unitNumber = 18
+    
+    integer, parameter :: lunghezzaPathName = 100
+    integer, parameter :: lunghezzaSingoloCampo = 100
+    integer, parameter :: lunghezzaSingoloCampoShort = 10
+    integer, parameter :: lunghezzaSingoloCampoMiddle = 20
+    integer, parameter :: lunghezzaSingolaRigaCSV = 300
     
     integer, parameter :: num_righe_intestazione_chiusura_titoli = 3
     integer, parameter :: num_righe_intestazione_titoli = 2
@@ -26,7 +36,7 @@ MODULE a_costanti_tipi_module
         integer :: compagnia
         integer :: agenzia
         integer :: intermediario
-        character(len=20) :: produttore
+        character(len=lunghezzaSingoloCampoShort) :: produttore
         integer :: data_giornale_cassa
         integer :: pagina_giornale_cassa
         integer :: linea_giornale_cassa
@@ -34,33 +44,33 @@ MODULE a_costanti_tipi_module
         integer :: classe_polizza
         integer :: numero_polizza
         integer :: numero_appendice
-        character(len=20) :: contraente
+        character(len=lunghezzaSingoloCampoMiddle) :: contraente
         integer :: data_inizio
         integer :: data_scadenza
-        character(len=20) :: frequenza_pagamento
-        real :: premio_netto
-        real :: premio_lordo
+        character(len=lunghezzaSingoloCampoShort) :: frequenza_pagamento
+        real(kind = maxPrecisione) :: premio_netto
+        real(kind = maxPrecisione) :: premio_lordo
         integer :: data_riscossione
         integer :: data_pagamento
-        real :: premio_pagato
-        real :: commissioni
-        real :: imposte_totali
-        real :: ssn
-        real :: rca_commissioni
-        real :: commissioni_cvt
-        real :: antiraket_tasse
-        character(len=20) :: residenza
-        real :: prov_tasse
-        character(len=20) :: sigla_targa
-        character(len=20) :: nr_targa
+        real(kind = maxPrecisione) :: premio_pagato
+        real(kind = maxPrecisione) :: commissioni
+        real(kind = maxPrecisione) :: imposte_totali
+        real(kind = maxPrecisione) :: ssn
+        real(kind = maxPrecisione) :: rca_commissioni
+        real(kind = maxPrecisione) :: commissioni_cvt
+        real(kind = maxPrecisione) :: antiraket_tasse
+        character(len=lunghezzaSingoloCampoMiddle) :: residenza
+        real(kind = maxPrecisione) :: prov_tasse
+        character(len=lunghezzaSingoloCampoShort) :: sigla_targa
+        character(len=lunghezzaSingoloCampoShort) :: nr_targa
         integer :: tipo_veicolo
-        character(len=50) :: modello
-        character(len=2) :: alimentazione
-        character(len=10) :: uso
+        character(len=lunghezzaSingoloCampo) :: modello
+        character(len=lunghezzaSingoloCampoShort) :: alimentazione
+        character(len=lunghezzaSingoloCampoShort) :: uso
         integer :: pieno_carico
         integer :: data_immatricolazione
         integer :: eta_conducente
-        character(len=10) :: tipo_quietanzamento
+        character(len=lunghezzaSingoloCampoShort) :: tipo_quietanzamento
     end type scarico_titoli
     
     
@@ -70,23 +80,23 @@ MODULE a_costanti_tipi_module
         integer :: riga_foglio_cassa
         integer :: operation_type
         integer :: data_incasso
-        character(len=20) :: contraente
-        character(len=15) :: cod_fis_par_iva
+        character(len=lunghezzaSingoloCampoMiddle) :: contraente
+        character(len=lunghezzaSingoloCampoMiddle) :: cod_fis_par_iva
         integer :: numero_polizza
         integer :: numero_appendice
         integer :: data_decorrenza
-        character(len=2) :: frazionamento
+        character(len=lunghezzaSingoloCampoShort) :: frazionamento
         integer :: ramo
-        character(len=4) :: pdgar_codgaranzia
-        real :: pdgar_netto1rata
-        real :: pdgar_tasse1rata
-        real :: pdgar_abbuono1rata
-        real :: contributo_ssn
-        real :: antiraket
-        character(len=4) :: provincia_di_residenza
-        real :: imposte_provinciali
-        character(len=4) :: sigla_targa
-        character(len=10) :: numero_targa
+        character(len=lunghezzaSingoloCampoShort) :: pdgar_codgaranzia
+        real(kind = maxPrecisione) :: pdgar_netto1rata
+        real(kind = maxPrecisione) :: pdgar_tasse1rata
+        real(kind = maxPrecisione) :: pdgar_abbuono1rata
+        real(kind = maxPrecisione) :: contributo_ssn
+        real(kind = maxPrecisione) :: antiraket
+        character(len=lunghezzaSingoloCampoShort) :: provincia_di_residenza
+        real(kind = maxPrecisione) :: imposte_provinciali
+        character(len=lunghezzaSingoloCampoShort) :: sigla_targa
+        character(len=lunghezzaSingoloCampoShort) :: numero_targa
     end type scarico_dettagliato_titoli    
     
 

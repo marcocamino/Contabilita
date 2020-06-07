@@ -3,7 +3,7 @@
 ! Author: audacia
 !
 ! Created on 25 aprile 2020, 23.32
-! versione 1.0 del 27/05/2020
+! versione 1.1 del 20200606
 
 MODULE input_file
     use a_costanti_tipi_module
@@ -20,9 +20,9 @@ MODULE input_file
         !numero di titoli presenti nel file e dimensione del vettore
         integer :: dimensioneVettoreScaricoDettagliatoTitoli 
         !path name del file contenente i titoli dettagliati per garanzia.
-        CHARACTER(len=100) :: nameFileScaricoTitoliDettagliato
+        CHARACTER(len=lunghezzaPathName) :: nameFileScaricoTitoliDettagliato
                 
-        character(len=300) :: buffer
+        character(len=lunghezzaSingolaRigaCSV) :: buffer
         integer :: i=0, ios, fu,j,stato,numRighe
         character(len=1) :: input
         
@@ -52,16 +52,16 @@ MODULE input_file
             
             !lettura di un file csv, ma bisogna sapere prima il numero di record
             print*, "Leggo il  file csv, e scrivo i records in memoria"
-            open(unit=18, FILE=nameFileScaricoTitoliDettagliato, status='old' , access ='sequential',form='formatted')
+            open(unit=unitNumber, FILE=nameFileScaricoTitoliDettagliato, status='old' , access ='sequential',form='formatted')
 
             do i = 1, (numRighe )
-                read(18,"(A)",IOSTAT=ios) buffer
+                read(unitNumber,"(A)",IOSTAT=ios) buffer
                 if(i > num_righe_intestazione_titoli_dettagliato) then
                     call copia_record_dettagliato(buffer, vettoreScaricoDettagliatoTitoli,( i - &
                                     &num_righe_intestazione_titoli_dettagliato))
                 endif
             end do
-            close(unit=18)
+            close(unit=unitNumber)
 
             print*, "Terminato di scrivere nel vettore i titoli dettagliati presenti nel file."
             write(*,'(a14)', advance='no')  "Premi invio. "
@@ -82,11 +82,11 @@ MODULE input_file
         type(scarico_titoli), POINTER :: vettoreScaricoTitoli(:)
         !numero di titoli presenti nel file e dimensione del vettore
         integer :: lunghezzaVettoreScaricoTitoli
-        CHARACTER(len=100) :: nameFileScaricoTitoli
+        CHARACTER(len=lunghezzaPathName) :: nameFileScaricoTitoli
                
         type(scarico_titoli), dimension(1) :: titolo
-        character(len=300) :: buffer
-        character(len=1) :: input
+        character(len=lunghezzaSingolaRigaCSV) :: buffer
+        character(len=1) :: inputCarattere
 
         integer :: i=0, ios, fu, stato, numRighe
 
@@ -114,15 +114,15 @@ MODULE input_file
             
             !lettura di un file csv, ma bisogna sapere prima il numero di record
             print*, "Leggo il  file csv, e scrivo i records nel vettore"
-            open(unit=18, FILE=nameFileScaricoTitoli, status='old' , access ='sequential',form='formatted')
+            open(unit=unitNumber, FILE=nameFileScaricoTitoli, status='old' , access ='sequential',form='formatted')
 
             do i = 1, (numRighe - num_righe_chiusura_titoli)
-                read(18,"(A)",IOSTAT=ios) buffer
+                read(unitNumber,"(A)",IOSTAT=ios) buffer
                 if(i > num_righe_intestazione_titoli) then
                     call copia_record(buffer, vettoreScaricoTitoli,( i - num_righe_intestazione_titoli))
                 endif
             end do
-            close(unit=18)
+            close(unit=unitNumber)
 
             print*, "Terminato di scrivere nel vettore i titoli presenti nel file."            
             numRighe = numRighe - num_righe_intestazione_chiusura_titoli
@@ -131,7 +131,7 @@ MODULE input_file
             print*, "Non è stato possibile allocare la memoria."
         endif
         write(*,'(a14)', advance='no')  "Premi invio. "
-        read(*, '(A)') input
+        read(*, '(A)') inputCarattere
         lunghezzaVettoreScaricoTitoli = numRighe
               
     end subroutine
@@ -141,13 +141,13 @@ MODULE input_file
     subroutine copia_record_dettagliato(record_stringa, vettoreScaricoDettagliatoTitoli, posizione)
         implicit none
 
-        character(len=300) :: record_stringa
+        character(len=lunghezzaSingolaRigaCSV) :: record_stringa
         type(scarico_dettagliato_titoli), POINTER :: vettoreScaricoDettagliatoTitoli(:)
-        integer posizione
+        integer :: posizione
         
-        character(len=100) :: campo_stringa
-        integer posizione_separatore, campo_intero
-        real campo_reale
+        character(len=lunghezzaSingoloCampo) :: campo_stringa
+        integer :: posizione_separatore, campo_intero
+        real(kind = maxPrecisione) :: campo_reale
         
         !separo il valore della data foglio cassa e lo scrivo nel rispettivo campo del vettore
         call dammi_prossimo_campo_intero(record_stringa,campo_intero)
@@ -245,13 +245,13 @@ MODULE input_file
     subroutine copia_record(record_stringa, vettoreRecordScaricoTitoli, posizione)
         implicit none
         
-        character(len=300) :: record_stringa
+        character(len=lunghezzaSingolaRigaCSV) :: record_stringa
         type(scarico_titoli), POINTER :: vettoreRecordScaricoTitoli(:)
-        integer posizione
+        integer :: posizione
         
-        character(len=100) :: campo_stringa
-        integer posizione_separatore, campo_intero
-        real campo_reale
+        character(len=lunghezzaSingoloCampo) :: campo_stringa
+        integer :: posizione_separatore, campo_intero
+        real(kind = maxPrecisione) :: campo_reale
         
         
         !separo il valore della compagnia e lo scrivo nel rispettivo campo del vettore
@@ -316,8 +316,8 @@ MODULE input_file
         
         !premio_netto
         call dammi_prossimo_campo_reale(record_stringa,campo_reale)
-        vettoreRecordScaricoTitoli(posizione)%premio_netto = campo_reale    
-        
+        vettoreRecordScaricoTitoli(posizione)%premio_netto = campo_reale   
+
         !premio_lordo
         call dammi_prossimo_campo_reale(record_stringa,campo_reale)
         vettoreRecordScaricoTitoli(posizione)%premio_lordo = campo_reale 
@@ -413,11 +413,11 @@ MODULE input_file
     !priva del primo valore a sinistra 
     subroutine dammi_prossimo_campo_intero(stringa, primo_campo_intero)
         implicit none
-        character(len=300) :: stringa
-        integer primo_campo_intero
+        character(len=lunghezzaSingolaRigaCSV) :: stringa
+        integer :: primo_campo_intero
         
-        character(len=100) :: primo_campo_stringa        
-        integer posizione_del_separatore
+        character(len=lunghezzaSingoloCampo) :: primo_campo_stringa        
+        integer :: posizione_del_separatore
       
         posizione_del_separatore = index(stringa, ";")
         primo_campo_stringa = stringa(:posizione_del_separatore - 1)
@@ -434,11 +434,11 @@ MODULE input_file
     !priva del primo valore a sinistra
     subroutine dammi_prossimo_campo_reale(stringa, primo_campo_reale)
         implicit none
-        character(len=300) :: stringa
-        real primo_campo_reale
+        character(len=lunghezzaSingolaRigaCSV) :: stringa
+        real(kind = maxPrecisione) :: primo_campo_reale
         
-        character(len=100) :: primo_campo_stringa        
-        integer posizione_del_separatore
+        character(len=lunghezzaSingoloCampo) :: primo_campo_stringa        
+        integer :: posizione_del_separatore
       
         posizione_del_separatore = index(stringa, ";")
         primo_campo_stringa = stringa(:posizione_del_separatore - 1)
@@ -456,10 +456,10 @@ MODULE input_file
     !priva del primo valore a sinistra    
     subroutine dammi_prossimo_campo_stringa(stringa, primo_campo_stringa)
         implicit none
-        character(len=300) :: stringa
-        character(len=100) :: primo_campo_stringa
+        character(len=lunghezzaSingolaRigaCSV) :: stringa
+        character(len=lunghezzaSingoloCampo) :: primo_campo_stringa
                
-        integer posizione_del_separatore
+        integer :: posizione_del_separatore
       
         posizione_del_separatore = index(stringa, ";")
         primo_campo_stringa = stringa(:posizione_del_separatore - 1)

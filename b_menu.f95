@@ -5,7 +5,7 @@
 ! Author: audacia
 !
 ! Created on 21 aprile 2020, 21.59
-! versione 1.0 del 20200523
+! versione 1.1 del 20200606
 
 MODULE b_menu
     use a_costanti_tipi_module

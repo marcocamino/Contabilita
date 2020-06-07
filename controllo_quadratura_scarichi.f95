@@ -3,7 +3,7 @@
 ! Author: audacia
 !
 ! Created on 18 maggio 2020, 23.15
-!
+! versione 1.1 del 20200606
 
 MODULE controllo_quadratura_scarichi
     use a_costanti_tipi_module
@@ -25,10 +25,11 @@ subroutine controllo_basi_imponibili(vettoreScaricoTitoli, dimensioneVettoreScar
     integer :: dimensioneVettoreScaricoDettagliatoTitoli 
     
     integer :: i,j
-    real :: premio_netto_dettagliato
+    real(kind = maxPrecisione) :: premio_netto_dettagliato
     character(len=1) :: input
-    logical :: quadratura = .true.
+    logical :: quadratura 
     
+    quadratura = .true.
     !ciclo sui titoli dello scarico decadale
     do i = 1, dimensioneVettoreScaricoTitoli
         
@@ -77,10 +78,11 @@ subroutine verifica_quadratura_tasse(vettoreScaricoTitoli, dimensioneVettoreScar
     integer :: dimensioneVettoreScaricoDettagliatoTitoli 
     
     integer :: i,j
-    real :: tasse_totali_bdx, tasse_1_rata_dettagliato, differenza
-    character(len=1) :: input
-    logical :: quadratura = .true.
+    real(kind = maxPrecisione) :: tasse_totali_bdx, tasse_1_rata_dettagliato, differenza
+    character(len=1) :: inputCarattere
+    logical :: quadratura 
     
+    quadratura = .true.
     print*, "Sono nella routine che verifica la quadratura delle tasse tra i due scarichi"
     
     !ciclo sui titoli dello scarico decadale
@@ -113,7 +115,7 @@ subroutine verifica_quadratura_tasse(vettoreScaricoTitoli, dimensioneVettoreScar
     end if
     print*, "Ho terminato di effettuare la quadratura"
     write(*,'(a14)', advance='no')  "Premi invio. "
-    read(*, '(A)') input
+    read(*, '(A)') inputCarattere
 
 end subroutine
 
@@ -133,18 +135,39 @@ subroutine verifica_quadratura_scarichi(vettoreScaricoTitoli, dimensioneVettoreS
     integer :: dimensioneVettoreScaricoDettagliatoTitoli 
     
     integer :: i,j
-    character(len=1) :: input
-    real :: totale_netto1rata = 0, totale_tasse1rata = 0, totale_abbuono1rata = 0, totale_contributo_ssn = 0, &
-        & totale_antiraket = 0 ,totale_imposte_provinciali = 0, premio_netto_dettagliato = 0
-    real :: totale_premio_netto_titoli = 0, differenza_premi_netti = 0, totale_premio_lordo_titoli = 0, &
-        & totale_tasse_titoli = 0, imposte_totali_titoli = 0, totale_ssn_titoli = 0, totale_antiraket_titoli = 0, &
-        & totale_prov_tasse_titoli = 0, totale_imposte = 0
+    character(len=1) :: inputCarattere
+    real(kind = maxPrecisione) :: totale_netto1rata, totale_tasse1rata, totale_abbuono1rata, totale_contributo_ssn,&
+        & totale_antiraket, totale_imposte_provinciali, premio_netto_dettagliato 
+    real(kind = maxPrecisione) :: totale_premio_netto_titoli, differenza_premi_netti, totale_premio_lordo_titoli, &
+        & totale_tasse_titoli, imposte_totali_titoli, totale_ssn_titoli, totale_antiraket_titoli, &
+        & totale_prov_tasse_titoli, totale_imposte_titoli
+        
+    real(kind = maxPrecisione) :: differenza_totale_tasse, differenza_totale_tasse_titoli, differenza_ssn, differenza_antiraket,&
+        & differenza_tasse_provinciali
+    
+    totale_netto1rata = 0
+    totale_tasse1rata = 0
+    totale_abbuono1rata = 0
+    totale_contributo_ssn = 0
+    totale_antiraket = 0 
+    totale_imposte_provinciali = 0
+    premio_netto_dettagliato = 0
+    
+    totale_premio_netto_titoli = 0
+    differenza_premi_netti = 0
+    totale_premio_lordo_titoli = 0
+    totale_tasse_titoli = 0
+    imposte_totali_titoli = 0
+    totale_ssn_titoli = 0
+    totale_antiraket_titoli = 0
+    totale_prov_tasse_titoli = 0
+    totale_imposte_titoli = 0
     
     print*,""
     print*,""
     print*, "Questa routine verifica la quadratura tra i due scarichi."
     !ciclo sullo scarico dettagliato e calcolo le somme totali del premio netto,tasse1rata, abbuono1rata,
-    !ssn, antiraket, imposte provinciali
+    !ssn, antiraket, imposte provinciali---punto uno delle regole di quadratura
     do J=1, dimensioneVettoreScaricoDettagliatoTitoli        
         totale_netto1rata = totale_netto1rata + vettoreScaricoDettagliatoTitoli(j)%pdgar_netto1rata
         totale_tasse1rata = totale_tasse1rata + vettoreScaricoDettagliatoTitoli(j)%pdgar_tasse1rata
@@ -154,12 +177,9 @@ subroutine verifica_quadratura_scarichi(vettoreScaricoTitoli, dimensioneVettoreS
         totale_imposte_provinciali = totale_imposte_provinciali + vettoreScaricoDettagliatoTitoli(j)%imposte_provinciali     
     end do
     
-    print*, "Premi netti dettagliato: ", totale_netto1rata
-    print*, "Abbuono dettagliato: ", totale_abbuono1rata
-    premio_netto_dettagliato = totale_netto1rata - totale_abbuono1rata
-    print*, "Premi netti effettivi dettagliato(netto-abbuono): ", premio_netto_dettagliato
     
-    !ciclo sullo scarico titoli aggregati 
+    !ciclo sullo scarico titoli e calcolo i valori totali di: premio netto, premio lordo, imposte totali, ssn, antiraket e 
+    !tasse provinciali
     do j = 1, dimensioneVettoreScaricoTitoli
         totale_premio_netto_titoli = totale_premio_netto_titoli + vettoreScaricoTitoli(j)%premio_netto
         totale_premio_lordo_titoli = totale_premio_lordo_titoli + vettoreScaricoTitoli(j)%premio_lordo
@@ -169,12 +189,33 @@ subroutine verifica_quadratura_scarichi(vettoreScaricoTitoli, dimensioneVettoreS
         totale_prov_tasse_titoli = totale_prov_tasse_titoli + vettoreScaricoTitoli(j)%prov_tasse
     end do
     
-    !calcolo le tasse totali dei titoli aggragati sommando inposta base + ssn + antiracket + provinciali
-    totale_imposte = imposte_totali_titoli + totale_ssn_titoli + totale_antiraket_titoli + totale_prov_tasse_titoli
-    print*, "Totale imposte titoli aggeragati calcolata sommando(Imp base+ssn+antiracket+provinciali): ", totale_imposte
+    !Stampo i valori precedentemente calcolati
+    print*, ""
+    print*, "Valori aggregati dello scarico titoli"
+    print*, "Premio netto titoli: ", totale_premio_netto_titoli
+    print*, "Premio lordo titoli: ", totale_premio_lordo_titoli
+    print*, "Totale imposte titoli: ", imposte_totali_titoli
+    print*, "Totale ssn titoli: ", totale_ssn_titoli
+    print*, "Totale antiraket titoli: ", totale_antiraket_titoli
+    print*, "Totale tasse provinciali titoli: ", totale_prov_tasse_titoli
     
+    print*, ""
+    print*, "Valori aggregati dello scarico dettagliato titoli"
+    print*, "Premi netti dettagliato: ", totale_netto1rata
+    print*, "Abbuono dettagliato: ", totale_abbuono1rata
+    print*, "Totale tasse prima rata: ", totale_tasse1rata
+    print*, "Totale contributo ssn: ", totale_contributo_ssn
+    print*, "Totale antiraket: ", totale_antiraket
+    print*, "Totale imposte provinciali: ", totale_imposte_provinciali
+
+    ! punto due delle regole di quadratura --- dal premio netto prima rata sotrarre l'abbuono prima rata
+    premio_netto_dettagliato = totale_netto1rata - totale_abbuono1rata
+    !print*, "Premi netti effettivi dettagliato(netto-abbuono): ", premio_netto_dettagliato
+    
+    !punto due delle regole di quadratura--- i premi netti nei due scarichi devono coincidere
     !calcolo la differenza tra i premi netti dei due scarichi
     differenza_premi_netti = ABS(premio_netto_dettagliato - totale_premio_netto_titoli)
+    print*, ""
     print*, "Premi netti titoli(sommando la colonna premio netto dello scarico aggregato): ", totale_premio_netto_titoli
     print*, "Premi netti titoli dettagliati(netto-abbuono dello scarico dettagliato): ", premio_netto_dettagliato
     if (differenza_premi_netti < 0.01)then
@@ -183,23 +224,69 @@ subroutine verifica_quadratura_scarichi(vettoreScaricoTitoli, dimensioneVettoreS
         print*, "SQUADRATURA premi netti: ", differenza_premi_netti
     end if
     
-    !calcolo il totale delle tasse dei titoli aggregati come differenza tra il totale dei premi lordo e il totale dei premi netti
+
+    
+    !punto tre delle regole di quadratura--- nello scarico dei titoli sotrarre dal premio lordo il premio netto ottenendo
+    !il totale delle tasse; il valore deve coincidere nei due scarichi
     totale_tasse_titoli = totale_premio_lordo_titoli - totale_premio_netto_titoli
+    print*, ""
     print*, "Totale tasse titoli(calcolate per differenza tra il premio lordo e il premio netto): ", totale_tasse_titoli
     print*, "Totale tasse titoli dettagliati(calcolato sommando la tassa prima rata dello scarico dettagliato): ", totale_tasse1rata
+    differenza_totale_tasse = ABS(totale_tasse_titoli - totale_tasse1rata)
+    if (differenza_totale_tasse < 0.01)then
+        print*, "OK quadratura totale tasse: ", differenza_totale_tasse
+    else 
+        print*, "SQUADRATURA totale tasse: ", differenza_totale_tasse
+    end if
     
+ 
+    !Punto quattro delle regole di quadratura--- nello scarico titoli sommare: inposta base + ssn + antiracket + provinciali, devo
+    !ottenere il totale delle tasse( lordo - netto)
+    print*, ""
+    totale_imposte_titoli = imposte_totali_titoli + totale_ssn_titoli + totale_antiraket_titoli + totale_prov_tasse_titoli
+    print*, "Totale imposte titoli aggregati calcolata sommando(Imp base+ssn+antiracket+provinciali): ", totale_imposte_titoli    
+    differenza_totale_tasse_titoli=ABS(totale_tasse_titoli - totale_imposte_titoli )
+    if (differenza_totale_tasse_titoli < 0.01)then
+        print*, "OK quadratura totale tasse titoli: ", differenza_totale_tasse_titoli
+    else 
+        print*, "SQUADRATURA totale tasse titoli: ", differenza_totale_tasse_titoli
+    end if
     
+    !punto cinque delle regole di quadratura: il valore totale del contibuto ssn nei due scarichi deve coincidere
+    print*, ""
     print*, "Totale ssn titoli: ", totale_ssn_titoli
     print*, "Totale ssn titoli dettagliati: ", totale_contributo_ssn
+    differenza_ssn = ABS(totale_ssn_titoli - totale_contributo_ssn)
+    if (differenza_ssn < 0.01)then
+        print*, "OK quadratura ssn: ", differenza_ssn
+    else 
+        print*, "SQUADRATURA ssn: ", differenza_ssn
+    end if
     
+    !punto cinque delle regole di quadratura: il valore totale del contibuto antiraket nei due scarichi deve coincidere
+    print*, ""
     print*, "Totale antiraket titoli: ", totale_antiraket_titoli
     print*, "Totale antiraket titoli dettagliati: ", totale_antiraket
+    differenza_antiraket = ABS(totale_antiraket_titoli - totale_antiraket)
+    if (differenza_antiraket < 0.01)then
+        print*, "OK quadratura antiraket: ", differenza_antiraket
+    else 
+        print*, "SQUADRATURA antiraket: ", differenza_antiraket
+    end if
     
+    !punto cinque delle regole di quadratura: il valore totale delle tasse provinciali nei due scarichi deve coincidere
+    print*, ""
     print*, "Totale imposte provinciali titoli: ", totale_prov_tasse_titoli
     print*, "Totale imposte provinciali titoli dettagliati: ", totale_imposte_provinciali
+    differenza_tasse_provinciali = ABS(totale_prov_tasse_titoli - totale_imposte_provinciali)
+    if (differenza_tasse_provinciali < 0.01)then
+        print*, "OK quadratura tasse provinciali: ", differenza_tasse_provinciali
+    else 
+        print*, "SQUADRATURA tasse provinciali: ", differenza_tasse_provinciali
+    end if
     
     write(*,'(a14)', advance='no')  "Premi invio. "
-    read(*, '(A)') input
+    read(*, '(A)') inputCarattere
 end subroutine 
 
 END MODULE controllo_quadratura_scarichi
